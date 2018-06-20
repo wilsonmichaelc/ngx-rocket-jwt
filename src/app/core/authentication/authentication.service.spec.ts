@@ -1,21 +1,34 @@
-import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
-
-import { AuthenticationService, Credentials} from './authentication.service';
-
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { CoreModule } from '@app/core';
 import { environment } from '@env/environment';
+
+import { AuthenticationService, Credentials } from './authentication.service';
+import { AuthTokenInterceptor } from '@app/core/http/auth-token.interceptor';
+import { HttpClient } from '@angular/common/http';
 
 describe('AuthenticationService', () => {
   let authenticationService: AuthenticationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AuthenticationService]
+      imports: [
+        CoreModule,
+        HttpClientTestingModule
+      ],
+      providers: [
+        HttpClient,
+        AuthenticationService,
+        AuthTokenInterceptor
+      ]
     });
   });
 
   beforeEach(inject([
-    AuthenticationService
+    AuthenticationService,
+    HttpTestingController
   ], (_authenticationService: AuthenticationService) => {
+
     authenticationService = _authenticationService;
   }));
 
@@ -36,6 +49,7 @@ describe('AuthenticationService', () => {
 
       // Assert
       request.subscribe(credentials => {
+        console.log(credentials);
         expect(credentials).toBeDefined();
         expect(credentials.token).toBeDefined();
       });

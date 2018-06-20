@@ -7,7 +7,6 @@ import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
 import { MaterialModule } from '@app/material.module';
 import { HomeComponent } from './home.component';
-import { OpenFDASearchService } from '../shared/drug-search/openfda-search.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -24,7 +23,7 @@ describe('HomeComponent', () => {
           HttpClientTestingModule
         ],
         declarations: [HomeComponent],
-        providers: [OpenFDASearchService]
+        providers: []
       })
       .compileComponents();
   }));

@@ -7,6 +7,7 @@ import { HttpCacheService } from './http-cache.service';
 import { ErrorHandlerInterceptor } from './error-handler.interceptor';
 import { CacheInterceptor } from './cache.interceptor';
 import { ApiPrefixInterceptor } from './api-prefix.interceptor';
+import { AuthTokenInterceptor } from '@app/core/http/auth-token.interceptor';
 
 describe('HttpService', () => {
   let httpCacheService: HttpCacheService;
@@ -17,6 +18,7 @@ describe('HttpService', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
+        AuthTokenInterceptor,
         ErrorHandlerInterceptor,
         CacheInterceptor,
         ApiPrefixInterceptor,
@@ -62,6 +64,7 @@ describe('HttpService', () => {
     // Assert
     request.subscribe(() => {
       expect(http.request).toHaveBeenCalled();
+      expect(interceptors.some(i => i instanceof AuthTokenInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ApiPrefixInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ErrorHandlerInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof CacheInterceptor)).toBeFalsy();
@@ -85,6 +88,7 @@ describe('HttpService', () => {
 
     // Assert
     request.subscribe(() => {
+      expect(interceptors.some(i => i instanceof AuthTokenInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ApiPrefixInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ErrorHandlerInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof CacheInterceptor)).toBeTruthy();
@@ -108,6 +112,7 @@ describe('HttpService', () => {
 
     // Assert
     request.subscribe(() => {
+      expect(interceptors.some(i => i instanceof AuthTokenInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ApiPrefixInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ErrorHandlerInterceptor)).toBeFalsy();
       expect(interceptors.some(i => i instanceof CacheInterceptor)).toBeFalsy();
@@ -131,7 +136,32 @@ describe('HttpService', () => {
 
     // Assert
     request.subscribe(() => {
+      expect(interceptors.some(i => i instanceof AuthTokenInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ApiPrefixInterceptor)).toBeFalsy();
+      expect(interceptors.some(i => i instanceof ErrorHandlerInterceptor)).toBeTruthy();
+      expect(interceptors.some(i => i instanceof CacheInterceptor)).toBeFalsy();
+    });
+    httpMock.expectOne({}).flush({});
+  });
+
+  it('should not use auth token interceptor', () => {
+    // Arrange
+    let interceptors: HttpInterceptor[];
+    const realRequest = http.request;
+    spyOn(HttpService.prototype, 'request').and.callFake(function(this: any) {
+      interceptors = this.interceptors;
+      return realRequest.apply(this, arguments);
+    });
+
+    // Act
+    const request = http
+      .disableAuthToken()
+      .get('/toto');
+
+    // Assert
+    request.subscribe(() => {
+      expect(interceptors.some(i => i instanceof AuthTokenInterceptor)).toBeFalsy();
+      expect(interceptors.some(i => i instanceof ApiPrefixInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof ErrorHandlerInterceptor)).toBeTruthy();
       expect(interceptors.some(i => i instanceof CacheInterceptor)).toBeFalsy();
     });
