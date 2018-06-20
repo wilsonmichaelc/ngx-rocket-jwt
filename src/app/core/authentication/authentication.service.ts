@@ -42,9 +42,9 @@ export class AuthenticationService {
   login(context: LoginContext): Observable<Credentials> {
 
     /*
-      REMOVE THIS FOR PRODUCTION
+      Remove this once you have an auth server up and running ... ;)
     */
-    if (!environment.production) {
+    if (environment.useDummyAuth) {
       return Observable.create((observer: Observer<any>) => {
           const data = {
             username: context.username,
