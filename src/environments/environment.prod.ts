@@ -6,6 +6,9 @@ export const environment = {
   useDummyAuth: false,
   version: env.npm_package_version,
   serverUrl: 'https://api.chucknorris.io',
+  apiUrl: 'localhost',
+  authUrl: 'localhost',
+  credentials: 'credentials',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US']
 };
