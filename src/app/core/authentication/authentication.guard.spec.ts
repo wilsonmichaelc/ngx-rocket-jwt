@@ -1,9 +1,9 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { AuthenticationGuard } from './authentication.guard';
 import { AuthenticationService } from './authentication.service';
 import { MockAuthenticationService } from './authentication.service.mock';
-import { AuthenticationGuard } from './authentication.guard';
 
 describe('AuthenticationGuard', () => {
   let authenticationGuard: AuthenticationGuard;
@@ -43,7 +43,7 @@ describe('AuthenticationGuard', () => {
 
   it('should return false and redirect to login if user is not authenticated', () => {
     // Arrange
-    authenticationService.credentials = null;
+    authenticationService.logout();
 
     // Act
     const result = authenticationGuard.canActivate();

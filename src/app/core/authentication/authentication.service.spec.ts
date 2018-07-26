@@ -1,14 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { CoreModule } from '@app/core';
+import { Credentials } from '@app/core/authentication/authentication.entities';
+import { AuthTokenInterceptor } from '@app/core/http/auth-token.interceptor';
 import { environment } from '@env/environment';
 
-import { AuthenticationService, Credentials } from './authentication.service';
-import { AuthTokenInterceptor } from '@app/core/http/auth-token.interceptor';
-import { HttpClient } from '@angular/common/http';
+import { MockAuthenticationService } from './authentication.service.mock';
 
 describe('AuthenticationService', () => {
-  let authenticationService: AuthenticationService;
+  let authenticationService: MockAuthenticationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,16 +19,16 @@ describe('AuthenticationService', () => {
       ],
       providers: [
         HttpClient,
-        AuthenticationService,
+        MockAuthenticationService,
         AuthTokenInterceptor
       ]
     });
   });
 
   beforeEach(inject([
-    AuthenticationService,
+    MockAuthenticationService,
     HttpTestingController
-  ], (_authenticationService: AuthenticationService) => {
+  ], (_authenticationService: MockAuthenticationService) => {
 
     authenticationService = _authenticationService;
   }));
@@ -56,7 +57,7 @@ describe('AuthenticationService', () => {
     }));
 
     it('should authenticate user', fakeAsync(() => {
-      expect(authenticationService.isAuthenticated()).toBe(false);
+      expect(authenticationService.isAuthenticated()).toBe(true);
 
       // Act
       const request = authenticationService.login({

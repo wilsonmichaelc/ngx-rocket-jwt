@@ -1,19 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Credentials, LoginContext } from '@app/core/authentication/authentication.entities';
 import { environment } from '@env/environment';
 import { Observable, Observer, of } from 'rxjs';
-
-export interface Credentials {
-  // Customize received credentials here
-  username: string;
-  token: string;
-}
-
-export interface LoginContext {
-  username: string;
-  password: string;
-  remember?: boolean;
-}
 
 /**
  * Provides a base for authentication workflow.
