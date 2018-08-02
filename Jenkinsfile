@@ -10,12 +10,6 @@ pipeline {
 				sh 'npm install'
 			}
 		}
-		stage('Test') {
-			steps {
-				echo 'npm run test here'
-				sh 'npm run test:ci'
-			}
-		}
 		stage('Build') {
 			steps {
 				echo 'Build here (maybe with webpack or something similar'
