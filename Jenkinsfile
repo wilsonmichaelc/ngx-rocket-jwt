@@ -18,7 +18,7 @@ pipeline {
 		}
 		stage('deploy-development'){
 		  when{
-		    branch 'master'
+		    branch 'development'
 		  }
 		  steps {
 		    echo 'Deploy Production'
@@ -26,7 +26,7 @@ pipeline {
 		    sh 'aws cloudfront create-invalidation --distribution-id $DEVELOPMENT_CLOUDFRONT_ID --paths /index.html'
 		  }
 		}
-		stage('deploy-master'){
+		stage('deploy-staging'){
 		  when{
 		    branch 'staging'
 		  }
@@ -38,7 +38,7 @@ pipeline {
 		}
 		stage('deploy-master'){
 		  when{
-		    branch 'development'
+		    branch 'master'
 		  }
 		  steps {
 		    echo 'Deploy Development'
